@@ -9,10 +9,12 @@ namespace Citizen
 {
     abstract class Citizen
     {
+        protected string _name;
         protected int _passport;
         protected int _age;
-        protected Citizen (int passport, int age)
+        protected Citizen (string name, int passport, int age)
         {
+            this._name = name;
             this._passport = passport;
             this._age = age;
         }
@@ -24,7 +26,10 @@ namespace Citizen
         {
             get { return _age; }
         }
-
+        public string Name
+        {
+            get { return _name; }
+        }
 
     }
 }

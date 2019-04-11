@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace Citizen
 {
-    class Queue:IEnumerable
+    class Queue : IEnumerable
     {
+
         private Node _head = null;
         private Node _tail = null;
+
+        #region AddCitizen
         public void Add(Citizen man)
         {
             Node nodePassport = _tail;
@@ -97,6 +100,9 @@ namespace Citizen
             }
 
         }
+        #endregion
+
+        #region ReturnLast
         public Node ReturnLast()
         {
             if (_head == null)
@@ -105,11 +111,32 @@ namespace Citizen
             }
             else
             {
-                return _tail;
+                Node current = _head;
+                while (true)
+                {
+                    if (current.Next == null)
+                    {
+                        return current;
+                    }
+                    else
+                    {
+                        if (current.Next != null)
+                        {
+                            current.Next.Index = current.Index + 1;
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            current = current.Next;
+                        }
+                    }
+                }
             }
         }
+        #endregion
 
-        public int Contains(Citizen citizen)
+        #region Contains
+        public int Contains(int numberOfPassport)
         {
             if (_head == null)
             {
@@ -117,35 +144,51 @@ namespace Citizen
             }
             else
             {
+
                 Node current = _head;
+                current.Index = 0;
                 while (current != null)
                 {
-                    if (current.Citizen.Equals(citizen))
+                    if (current.Citizen.Passport.Equals(numberOfPassport))
                     {
                         return current.Index;                       
                     }
                     else
                     {
-                        current = current.Next;
+                        if (current.Next != null)
+                        {
+                            current.Next.Index = current.Index + 1;
+                            current = current.Next;
+                        }
+                        else
+                        {
+                            current = current.Next;
+                        }
                     }
                 }
                 return -1;
             }
         }
+        #endregion
+
         public void Clear()
         {
             _head = null;
             _tail = null;
       
         }
+
+        #region RemoveFirst
         public void RemoveFirst ()
         {
             if (_head == null)
             {
                 _head = null;
+                Console.WriteLine("The Queue is empty!");
             }
             else
             {
+                Console.WriteLine("Remove the First Citizen is successfull");
                 if (_head.Next == null)
                 {
                     _head = null;
@@ -158,22 +201,54 @@ namespace Citizen
             }
 
         }
-        public void Remove (Citizen citizen)
-        {
-            Node prev = null;
-            Node current = _head;
+        #endregion
 
-            while (current != null)
+        #region Remove
+        public void Remove (string name)
+        {
+            if (_head == null)
             {
-                if (current.Citizen.Equals(citizen))
+                _head = null;
+                Console.WriteLine("There is no {0} in the Queue!", name);
+            }
+            else
+            {
+                Node current = _head;
+
+                while (current != null)
                 {
-                    if (prev != null)
+                    if (current.Citizen.Name.Equals(name))
                     {
-                        prev.Next = current.Next;
+                        Console.WriteLine("Remove {0} is successfull", name);
+                        if (current == _head)
+                        {
+                            _head = current.Next;
+                            return;
+                        }
+                        else if (current == _tail)
+                        {
+                            _head = null;
+                            _tail = null;
+                            return;
+                        }
+                        else 
+                        {
+                            current.Previous.Next = current.Next;
+                            current.Next.Previous = current.Previous;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        current = current.Next;
                     }
                 }
+                Console.WriteLine("There is no {0} in the Queue!", name);
+
             }
         }
+        #endregion
+
         public IEnumerator GetEnumerator()
         {
             Node current = _head;

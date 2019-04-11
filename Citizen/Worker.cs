@@ -8,8 +8,8 @@ namespace Citizen
 {
     class Worker:Citizen
     {
-       public Worker(int passport, int age)
-            :base(passport, age)
+       public Worker(string name, int passport, int age)
+            :base(name, passport, age)
         {
 
         }
