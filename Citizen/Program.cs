@@ -26,8 +26,15 @@ namespace Citizen
                 Console.WriteLine("6 - Show All List");
                 Console.WriteLine("7 - Quit");
                 Console.WriteLine();
-
-                int sign = Convert.ToInt32(Console.ReadLine());
+                int sign = 0;
+                try
+                {
+                    sign = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    sign = 0;
+                }
 
                 switch (sign)
                 {
