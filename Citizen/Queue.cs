@@ -9,10 +9,20 @@ namespace Citizen
 {
     class Queue : IEnumerable
     {
-
+        
         private Node _head = null;
         private Node _tail = null;
 
+        //private static void RebildingIndex()
+        //{
+            //Node currentIndex = _head;
+            //while (currentIndex.Next != null)
+            //{
+                //currentIndex.Next.Index = currentIndex.Index + 1;
+                //currentIndex = currentIndex.Next;
+            //}
+        //}
+ 
         #region AddCitizen
         public void Add(Citizen man)
         {
@@ -40,10 +50,9 @@ namespace Citizen
                         nodePassport = nodePassport.Previous;
                     }
                 }
-            }
-            if (nodePassport == null)
-            {
-                if (man.Age < 65)
+            
+            
+                if (man.Age < Node.AgeOfRetiree)
                 {
                     Node node = new Node();
                     node.Citizen = man;
@@ -59,11 +68,11 @@ namespace Citizen
                 {
                     Node node = new Node();
                     node.Citizen = man;
-
+                    Node currentIndex = _head;
                     Node current = _tail;
                     while (current != null)
                     {
-                        if ((node.Citizen.Age >= 65) && (current.Citizen.Age >= 65))
+                        if ((node.Citizen.Age >= Node.AgeOfRetiree) && (current.Citizen.Age >= Node.AgeOfRetiree))
                         {
                             if (current == _tail)
                             {
@@ -81,6 +90,12 @@ namespace Citizen
                                 node.Next = current.Next;
                                 node.Previous = current;
                                 temp.Next = node;
+                                
+                                while (currentIndex.Next != null)
+                                {
+                                    currentIndex.Next.Index = currentIndex.Index + 1;
+                                    currentIndex = currentIndex.Next;
+                                }
                                 return;
                             }
                         }
@@ -95,7 +110,14 @@ namespace Citizen
                         _head = node;
                         node.Next = temp;
                         node.Next.Previous = node;
+                        
+                        while (currentIndex.Next != null)
+                        {
+                            currentIndex.Next.Index = currentIndex.Index + 1;
+                            currentIndex = currentIndex.Next;
+                        }
                     }
+                    
                 }
             }
 
@@ -111,26 +133,7 @@ namespace Citizen
             }
             else
             {
-                Node current = _head;
-                while (true)
-                {
-                    if (current.Next == null)
-                    {
-                        return current;
-                    }
-                    else
-                    {
-                        if (current.Next != null)
-                        {
-                            current.Next.Index = current.Index + 1;
-                            current = current.Next;
-                        }
-                        else
-                        {
-                            current = current.Next;
-                        }
-                    }
-                }
+                return _tail;
             }
         }
         #endregion
@@ -227,8 +230,9 @@ namespace Citizen
                         }
                         else if (current == _tail)
                         {
-                            _head = null;
-                            _tail = null;
+                            _tail.Previous.Next = null;
+                            _tail = current.Previous;
+                                                       
                             return;
                         }
                         else 
@@ -252,6 +256,10 @@ namespace Citizen
         public IEnumerator GetEnumerator()
         {
             Node current = _head;
+            if (_head == null)
+            {
+                Console.WriteLine("The Queue is empty!");
+            }
             while (current != null)
             {
                 yield return current.Citizen;

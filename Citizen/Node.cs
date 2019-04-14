@@ -8,6 +8,7 @@ namespace Citizen
 {
     class Node
     {
+        public const int AgeOfRetiree = 65;
         public Citizen Citizen
         {
             get; set;
