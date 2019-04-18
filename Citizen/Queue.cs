@@ -26,23 +26,24 @@ namespace Citizen
         #region AddCitizen
         public void Add(Citizen man)
         {
-            Node nodePassport = _tail;
+           
             if (_head == null)
             {
                 Node node = new Node();
                 node.Citizen = man;
-                _head = node;
-                _tail = node;
-                node.Index = 0;
+                _head = node; 
+                _tail = node; 
                 return;
             }
             else
             {
+                Node nodePassport = _tail;
                 while (nodePassport != null)
                 {
+                    
                     if (nodePassport.Citizen.Passport.Equals(man.Passport))
                     {
-                        Console.WriteLine("Number of passport №{0} is exist in list!",man.Passport);
+                        Console.WriteLine("Number of passport №{0} is exist in queue!",man.Passport);
                         return;
                     }
                     else
@@ -60,7 +61,6 @@ namespace Citizen
                     node.Previous = _tail;
                     node.Next = null;
 
-                    node.Index = _tail.Index + 1;
                     _tail.Next = node;
                     _tail = node;
                 }
@@ -68,34 +68,24 @@ namespace Citizen
                 {
                     Node node = new Node();
                     node.Citizen = man;
-                    Node currentIndex = _head;
                     Node current = _tail;
                     while (current != null)
                     {
-                        if ((node.Citizen.Age >= Node.AgeOfRetiree) && (current.Citizen.Age >= Node.AgeOfRetiree))
+                        if (current.Citizen.Age >= Node.AgeOfRetiree) 
                         {
                             if (current == _tail)
                             {
                                 node.Previous = _tail;
-                                node.Next = null;
-
-                                node.Index = _tail.Index + 1;
+                                node.Next = null;                                
                                 _tail.Next = node;
                                 _tail = node;
                                 return;
                             }
                             else
-                            {
-                                Node temp = current;
+                            {                                                               
                                 node.Next = current.Next;
                                 node.Previous = current;
-                                temp.Next = node;
-                                
-                                while (currentIndex.Next != null)
-                                {
-                                    currentIndex.Next.Index = currentIndex.Index + 1;
-                                    currentIndex = currentIndex.Next;
-                                }
+                                current.Next = node;
                                 return;
                             }
                         }
@@ -104,20 +94,11 @@ namespace Citizen
                             current = current.Previous;
                         }
                     }
-                    if (current == null)
-                    {
-                        Node temp = _head;
-                        _head = node;
-                        node.Next = temp;
-                        node.Next.Previous = node;
-                        
-                        while (currentIndex.Next != null)
-                        {
-                            currentIndex.Next.Index = currentIndex.Index + 1;
-                            currentIndex = currentIndex.Next;
-                        }
-                    }
-                    
+
+                    Node temp = _head;
+                    _head = node;
+                    node.Next = temp;
+                    node.Next.Previous = node;                                                             
                 }
             }
 
@@ -141,36 +122,16 @@ namespace Citizen
         #region Contains
         public int Contains(int numberOfPassport)
         {
-            if (_head == null)
+            Node current = _head;
+            while (current != null)
             {
-                return -1;
-            }
-            else
-            {
-
-                Node current = _head;
-                current.Index = 0;
-                while (current != null)
+                if (current.Citizen.Passport.Equals(numberOfPassport))
                 {
-                    if (current.Citizen.Passport.Equals(numberOfPassport))
-                    {
-                        return current.Index;                       
-                    }
-                    else
-                    {
-                        if (current.Next != null)
-                        {
-                            current.Next.Index = current.Index + 1;
-                            current = current.Next;
-                        }
-                        else
-                        {
-                            current = current.Next;
-                        }
-                    }
+                    return current.Index;
                 }
-                return -1;
             }
+            return -1;
+            
         }
         #endregion
 
@@ -209,47 +170,41 @@ namespace Citizen
         #region Remove
         public void Remove (string name)
         {
-            if (_head == null)
-            {
-                _head = null;
-                Console.WriteLine("There is no {0} in the Queue!", name);
-            }
-            else
-            {
-                Node current = _head;
 
-                while (current != null)
+            Node current = _head;
+
+            while (current != null)
+            {
+                if (current.Citizen.Name.Equals(name))
                 {
-                    if (current.Citizen.Name.Equals(name))
+                    Console.WriteLine("Remove {0} is successfull", name);
+                    if (current == _head)
                     {
-                        Console.WriteLine("Remove {0} is successfull", name);
-                        if (current == _head)
-                        {
-                            _head = current.Next;
-                            return;
-                        }
-                        else if (current == _tail)
-                        {
-                            _tail.Previous.Next = null;
-                            _tail = current.Previous;
-                                                       
-                            return;
-                        }
-                        else 
-                        {
-                            current.Previous.Next = current.Next;
-                            current.Next.Previous = current.Previous;
-                            return;
-                        }
+                        _head = current.Next;
+                        _head.Previous = null;
+                        return;
                     }
-                    else
+                    else if (current == _tail)
                     {
-                        current = current.Next;
+                        _tail = current.Previous;
+                        _tail.Next = null;
+                       
+                                                       
+                        return;
+                    }
+                    else 
+                    {
+                        current.Previous.Next = current.Next;
+                        current.Next.Previous = current.Previous;
+                        return;
                     }
                 }
-                Console.WriteLine("There is no {0} in the Queue!", name);
-
+                else
+                {
+                    current = current.Next;
+                }
             }
+            Console.WriteLine("There is no {0} in the Queue!", name);           
         }
         #endregion
 

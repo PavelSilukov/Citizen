@@ -22,8 +22,15 @@ namespace Citizen
             get; set;
         }
         public int Index
-        {
-            get; set;
+        { 
+            get
+            {              
+                if (Previous == null)
+                {
+                    return 0;
+                }
+                return Previous.Index + 1;
+            }
         }
 
     }
